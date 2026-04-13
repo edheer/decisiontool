@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Decision Framework | Professional Advisory Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f1f5f9; color: #1e293b; }
+        .card-choice { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 2px solid transparent; }
+        .card-choice:hover { transform: translateY(-4px); border-color: #3b82f6; background-color: #f8fafc; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .step-transition { transition: all 0.5s ease; }
+        .result-gradient { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Top Bar -->
+    <header class="w-full bg-white border-b border-slate-200 py-4 px-10 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-lg">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold uppercase tracking-widest text-slate-900">AI Decision Framework</h1>
+                <p class="text-[10px] font-medium text-slate-500 uppercase tracking-wider italic">Strategic Consultant Advisory Tool</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="h-1 w-40 bg-slate-100 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-blue-600 transition-all duration-1000 ease-out" style="width: 14.28%"></div>
+            </div>
+            <span id="step-label" class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Step 1 / 7</span>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto py-16 px-6">
+        
+        <div id="app-content">
+            <!-- STAP 1: PROBLEEM & CONTEXT -->
+            <section id="step1" class="step-transition">
+                <div class="max-w-2xl mb-12">
+                    <h2 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-4">Initialiseer de Use Case.</h2>
+                    <p class="text-lg text-slate-600 italic leading-relaxed">Vóór we de techniek induiken, definiëren we het zakelijke fundament. Wat is het concrete probleem en welk proces verbeteren we? (Ref: Checklist 6.2.1)</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200">
+                    <label class="block text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Project Omschrijving</label>
+                    <textarea id="case-name" class="w-full h-40 bg-slate-50 border-none rounded-2xl p-6 text-xl text-slate-700 focus:ring-2 focus:ring-blue-500 transition-all outline-none" placeholder="Bijv. Optimalisatie van inkomende klantenservice aanvragen via email..."></textarea>
+                    <button onclick="saveStep1()" class="mt-8 w-full py-5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-3">
+                        Start Strategische Analyse <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- STAP 2: BUSINESSWAARDE -->
+            <section id="step2" class="hidden step-transition">
+                <div class="max-w-2xl mb-12 text-center mx-auto">
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-4">Business Value Check.</h2>
+                    <p class="text-slate-500">Is de investering in AI gerechtvaardigd door de verwachte ROI of kwaliteitswinst? (Ref: Checklist 6.2.2)</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div onclick="nextStep(3, 'waarde', 'high')" class="card-choice bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                        <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 text-2xl shadow-inner"><i class="fas fa-gem"></i></div>
+                        <h3 class="text-xl font-bold mb-3 tracking-tight">Hoge Strategische Waarde</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed italic mb-4">"De oplossing levert significante tijdwinst op (>30%), verhoogt de klanttevredenheid direct, of verlaagt operationele kosten op grote schaal."</p>
+                        <div class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">Selecteer bij hoge ROI</div>
+                    </div>
+                    <div onclick="terminalAction('Lage Waarde', 'Het project biedt onvoldoende businesswaarde om een complexe AI-implementatie te rechtvaardigen op dit moment.', 'slate')" class="card-choice bg-white p-8 rounded-3xl shadow-sm border border-slate-100 opacity-60">
+                        <div class="w-14 h-14 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mb-6 text-2xl"><i class="fas fa-ban"></i></div>
+                        <h3 class="text-xl font-bold mb-3 tracking-tight">Beperkte Waarde</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed italic mb-4">"De winst is marginaal of het proces wordt te weinig uitgevoerd om de ontwikkelingskosten terug te verdienen."</p>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Project parkeren</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAP 3: DATA KWALITEIT -->
+            <section id="step3" class="hidden step-transition">
+                <div class="max-w-2xl mb-12">
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-4">Data Readiness Level.</h2>
+                    <p class="text-slate-500 italic">Zonder kwalitatieve 'brandstof' kan de AI niet functioneren. Beoordeel de beschikbaarheid. (Ref: Checklist 6.2.3)</p>
+                </div>
+                
+                <div class="grid gap-4">
+                    <div onclick="nextStep(4, 'data', 'ready')" class="card-choice bg-white p-6 rounded-2xl border border-slate-100 flex items-center gap-6">
+                        <div class="bg-indigo-50 text-indigo-600 p-4 rounded-xl"><i class="fas fa-database fa-lg"></i></div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-lg">Geadvanceerde Data Beschikbaarheid</h4>
+                            <p class="text-xs text-slate-400 mt-1">Er is voldoende historische, digitale en gestructureerde data aanwezig voor training of context-gebruik.</p>
+                        </div>
+                        <i class="fas fa-chevron-right text-slate-300"></i>
+                    </div>
+                    <div onclick="terminalAction('Data Blockage', 'Er is onvoldoende digitale data aanwezig. De eerste stap is een data-verzamelstrategie (Component 3: Expert nodig).', 'yellow')" class="card-choice bg-white p-6 rounded-2xl border border-slate-100 flex items-center gap-6">
+                        <div class="bg-yellow-50 text-yellow-600 p-4 rounded-xl"><i class="fas fa-exclamation-circle fa-lg"></i></div>
+                        <div class="flex-1 text-slate-400">
+                            <h4 class="font-bold text-lg">Analoge of Gefragmenteerde Data</h4>
+                            <p class="text-xs italic mt-1">Data is niet digitaal ontsloten of bevat te veel ruis om betrouwbaar te zijn voor AI-toepassingen.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAP 4: PROCESGESCHIKTHEID -->
+            <section id="step4" class="hidden step-transition">
+                <div class="max-w-2xl mb-12">
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-4">Cognitieve Analyse.</h2>
+                    <p class="text-slate-500 italic">Vraagt dit proces om oordeelsvorming (AI) of om het strikt volgen van stappen (Traditionele Automatisering)? (Ref: Checklist 6.2.4)</p>
+                </div>
+                
+                <div class="grid gap-6">
+                    <div onclick="nextStep(5, 'proces', 'ai')" class="card-choice bg-white p-8 rounded-3xl border border-slate-100">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-purple-100 text-purple-600 p-3 rounded-lg"><i class="fas fa-wand-magic-sparkles"></i></div>
+                            <h4 class="font-black uppercase tracking-widest text-xs">Variabel & Interpretatief</h4>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Besluitvorming op basis van Context</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed italic">"Het proces verwerkt ongestructureerde tekst, beelden of vraagt om een menselijke manier van begrijpen. Er is geen vaste 'Als-Dan' logica mogelijk."</p>
+                    </div>
+                    <div onclick="terminalAction('Traditionele Automatisering', 'Dit proces is volledig regel-gebaseerd. Gebruik Power Automate of RPA voor een hogere betrouwbaarheid en lagere kosten.', 'blue')" class="card-choice bg-white p-8 rounded-3xl border border-slate-100 opacity-60">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-lg"><i class="fas fa-gears"></i></div>
+                            <h4 class="font-black uppercase tracking-widest text-xs">Deterministisch & Statisch</h4>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Regel-gebaseerde Logica</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed italic">"Het proces volgt altijd dezelfde stappen op basis van vaste databasevelden. Traditionele automatisering is hier superieur."</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAP 5: RISICO -->
+            <section id="step5" class="hidden step-transition">
+                <div class="max-w-2xl mb-12">
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-4">Risk & Fouttolerantie.</h2>
+                    <p class="text-slate-500 italic">AI is probabilistisch (kan fouten maken). Hoe kritisch is een onjuist resultaat voor de business? (Ref: Checklist 6.2.5)</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div onclick="nextStep(6, 'risico', 'low')" class="card-choice bg-white p-8 rounded-3xl border border-slate-100">
+                        <h3 class="font-bold text-lg mb-2">Lage Impact</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed italic italic">Fouten zijn acceptabel of worden door een mens gecorrigeerd in een niet-kritieke workflow. (Bijv. Interne samenvatting)</p>
+                    </div>
+                    <div onclick="nextStep(6, 'risico', 'high')" class="card-choice bg-white p-8 rounded-3xl border border-orange-200 bg-orange-50/30">
+                        <h3 class="font-bold text-lg mb-2 text-orange-700">Kritisch Proces</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed italic italic">Fouten leiden tot financiële schade, juridische claims of veiligheidsrisico's. (Bijv. Medisch advies of contractvalidatie)</p>
+                        <div class="mt-4 text-[10px] font-black text-orange-600 uppercase tracking-widest"><i class="fas fa-shield-halved mr-1"></i> Expertborging Vereist</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAP 6 & 7: HET RESULTAAT (HET RAPPORT) -->
+            <section id="result-page" class="hidden step-transition">
+                <div class="bg-white rounded-[40px] shadow-2xl overflow-hidden border border-slate-200">
+                    <div class="result-gradient p-12 text-white">
+                        <div class="flex justify-between items-start mb-10">
+                            <div>
+                                <span class="bg-blue-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Strategisch Advies Rapport</span>
+                                <h2 id="res-title" class="text-5xl font-extrabold tracking-tighter mt-4">AI Oplossing Geadviseerd</h2>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Datum Analyse</p>
+                                <p id="current-date" class="font-mono text-sm tracking-widest">30-03-2026</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-3 gap-8 pt-8 border-t border-slate-700">
+                            <div>
+                                <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Status</p>
+                                <p class="font-bold text-sm">Gereed voor implementatie</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Data-Confidence</p>
+                                <p class="font-bold text-sm text-green-400 italic">High (Ready)</p>
+                            </div>
+                            <div id="expert-status">
+                                <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Security Check</p>
+                                <p id="expert-label" class="font-bold text-sm">Standard Guardrails</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-12">
+                        <div class="grid md:grid-cols-2 gap-12">
+                            <!-- Linker kolom -->
+                            <div>
+                                <h4 class="text-xs font-black uppercase tracking-widest text-blue-600 mb-6">Onderbouwing & Context</h4>
+                                <div class="bg-slate-50 p-6 rounded-2xl mb-6">
+                                    <p id="res-case-name" class="text-slate-700 leading-relaxed font-medium italic"></p>
+                                </div>
+                                <p class="text-sm text-slate-500 leading-relaxed">
+                                    Op basis van het <span class="font-bold text-slate-800 tracking-tight italic">AI Decision Framework</span> is vastgesteld dat deze use case de drempelwaarde voor rendabele AI-implementatie overschrijdt. De combinatie van ongestructureerde data en de noodzaak voor cognitieve interpretatie maakt traditionele automatisering ongeschikt.
+                                </p>
+                            </div>
+
+                            <!-- Rechter kolom -->
+                            <div>
+                                <h4 class="text-xs font-black uppercase tracking-widest text-blue-600 mb-6">Action Plan (Vervolgstappen)</h4>
+                                <ul id="res-steps-list" class="space-y-4">
+                                    <!-- Wordt gevuld door JS -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="expert-box" class="hidden mt-12 p-8 bg-orange-50 rounded-3xl border border-orange-100">
+                            <div class="flex gap-6">
+                                <div class="text-orange-500 text-3xl"><i class="fas fa-user-tie"></i></div>
+                                <div>
+                                    <h5 class="text-orange-900 font-bold mb-1 italic text-lg">Inzet van AI-Expert Vereist (Component 3)</h5>
+                                    <p class="text-orange-700 text-sm leading-relaxed italic">
+                                        Vanwege de hoge risicoklasse van dit proces is een validatie door een AI-expert noodzakelijk vóór de pilot-fase. De focus ligt op 'Hallucination Management' en het ontwerpen van een robuuste Human-in-the-loop workflow.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 pt-8 border-t border-slate-100 flex justify-between items-center">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic leading-relaxed leading-relaxed">Gegenereerd door HSO AI Decision Tool • Vertrouwelijk Advies</p>
+                            <button onclick="location.reload()" class="px-6 py-2 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition tracking-widest uppercase">Restart Analysis</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        let userData = {
+            case: '',
+            waarde: '',
+            data: '',
+            proces: '',
+            risico: ''
+        };
+
+        function saveStep1() {
+            const input = document.getElementById('case-name').value;
+            if(!input) return alert("Omschrijf eerst de use case.");
+            userData.case = input;
+            nextStep(2);
+        }
+
+        function nextStep(step, key, value) {
+            if(key) userData[key] = value;
+
+            // Verberg alle secties
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            
+            // Toon de juiste sectie
+            const nextSec = document.getElementById(step === 6 ? 'result-page' : 'step' + step);
+            nextSec.classList.remove('hidden');
+            
+            // Update progress bar
+            const percent = (step / 7) * 100;
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('step-label').innerText = `Step ${step} / 7`;
+
+            if(step === 6) renderResult();
+        }
+
+        function terminalAction(title, reason, color) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            const resultPage = document.getElementById('result-page');
+            resultPage.classList.remove('hidden');
+
+            document.getElementById('res-title').innerText = title;
+            document.getElementById('res-case-name').innerText = reason;
+            document.querySelector('.result-gradient').className = `result-gradient p-12 text-white bg-${color}-900`;
+            document.getElementById('res-steps-list').innerHTML = `<li class="p-4 bg-slate-50 rounded-xl text-sm border-l-4 border-red-500 italic">Advies: Stop de huidige AI-verkenning en focus op de genoemde blokkade.</li>`;
+        }
+
+        function renderResult() {
+            document.getElementById('res-case-name').innerText = `"${userData.case}"`;
+            const list = document.getElementById('res-steps-list');
+            
+            let steps = [
+                {t: "Solution Design", d: "Vertaal de context naar een Agentic Workflow (bijv. Microsoft Copilot Studio)."},
+                {t: "Data Grounding", d: "Koppel de geselecteerde bronnen aan een RAG-model (Retrieval-Augmented Generation)."},
+                {t: "Pilot Fase", d: "Start een MVP (Minimum Viable Product) met een testgroep van 3-5 consultants."}
+            ];
+
+            if(userData.risico === 'high') {
+                document.getElementById('expert-box').classList.remove('hidden');
+                document.getElementById('expert-label').innerText = "Critical (Manual Review)";
+                document.getElementById('expert-label').className = "font-bold text-sm text-orange-400";
+                steps.push({t: "Borging", d: "Plan de verplichte audit met de AI-Expert in week 1 van de realisatie."});
+            }
+
+            list.innerHTML = steps.map(s => `
+                <li class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 transition">
+                    <p class="text-[10px] font-black uppercase text-blue-600 mb-1 leading-relaxed leading-relaxed">${s.t}</p>
+                    <p class="text-sm font-semibold text-slate-700 leading-relaxed">${s.d}</p>
+                </li>
+            `).join('');
+
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString('nl-NL');
+        }
+    </script>
+</body>
+</html>
